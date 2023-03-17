@@ -16,7 +16,7 @@ import os
 
 # initializing Flask app
 cur_dir = Path()
-app = Flask(__name__, instance_path=str(cur_dir.resolve()))
+app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
 
 # initializing CKEditor
