@@ -11,6 +11,7 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from pathlib import Path
 from functools import wraps
+import psycopg2
 import os
 
 
