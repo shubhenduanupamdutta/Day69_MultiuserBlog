@@ -19,6 +19,8 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+
+
 develop-eggs/
 dist/
 downloads/
@@ -49,6 +51,8 @@ pip-delete-this-directory.txt
 # Databases
 blog.db
 
+#rough code
+rough.py
 # Unit test / coverage reports
 htmlcov/
 .tox/
