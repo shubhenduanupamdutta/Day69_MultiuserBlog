@@ -1,8 +1,10 @@
 from pathlib import Path
-from dotenv import dotenv_values
-
+from dotenv import load_dotenv
+import os
 print(Path().resolve())
 
-config = dotenv_values(".env")
-print(config)
-print(config["DOMAIN"])
+load_dotenv()
+print(os.environ.get("DATABASE_URI"))
+print(type(os.environ.get("DATABASE_URI")))
+
+

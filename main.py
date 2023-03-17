@@ -11,11 +11,13 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from pathlib import Path
 from functools import wraps
+import os
+
 
 # initializing Flask app
 cur_dir = Path()
 app = Flask(__name__, instance_path=str(cur_dir.resolve()))
-app.secret_key = 'f71fd9b450afda3c420cd068d3095a8d1a2b024d1679f8083293f0f04183fbef'
+app.secret_key = os.environ.get("SECRET_KEY")
 
 # initializing CKEditor
 ckeditor = CKEditor()
@@ -26,7 +28,7 @@ bootstrap = Bootstrap5()
 bootstrap.init_app(app)
 
 # # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
 db = SQLAlchemy()
 db.init_app(app)
 
@@ -35,7 +37,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-# initialize gravaar
+# initialize gravatar
 gravatar = Gravatar(app,
                     size=100,
                     rating='g',
@@ -79,8 +81,8 @@ class Comment(db.Model):
     blog_post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
     post = relationship("BlogPost", back_populates="comments")
 
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 
 @login_manager.user_loader
