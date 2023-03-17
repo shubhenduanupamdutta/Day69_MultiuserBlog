@@ -5,13 +5,14 @@ from datetime import date, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
-from sqlalchemy.exc import NoResultFound, IntegrityError
+from sqlalchemy.exc import NoResultFound, IntegrityError, NoSuchModuleError
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from pathlib import Path
 from functools import wraps
 import os
+from azureproject.get_conn import get_conn
 
 
 # initializing Flask app
@@ -28,9 +29,15 @@ bootstrap = Bootstrap5()
 bootstrap.init_app(app)
 
 # # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
-db = SQLAlchemy()
-db.init_app(app)
+try:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
+    db = SQLAlchemy()
+    db.init_app(app)
+except NoSuchModuleError:
+    app.config.update(SQLALCHEMY_DATABASE_URI=get_conn())
+    db = SQLAlchemy()
+    db.init_app()
+
 
 # Initializing Login Manager
 login_manager = LoginManager()
