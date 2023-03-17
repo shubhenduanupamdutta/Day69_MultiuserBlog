@@ -12,7 +12,6 @@ from flask_gravatar import Gravatar
 from pathlib import Path
 from functools import wraps
 import os
-from azureproject.get_conn import get_conn
 
 
 # initializing Flask app
@@ -29,14 +28,10 @@ bootstrap = Bootstrap5()
 bootstrap.init_app(app)
 
 # # CONNECT TO DB
-try:
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
-    db = SQLAlchemy()
-    db.init_app(app)
-except NoSuchModuleError:
-    app.config.update(SQLALCHEMY_DATABASE_URI=get_conn())
-    db = SQLAlchemy()
-    db.init_app()
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
+db = SQLAlchemy()
+db.init_app(app)
+
 
 
 # Initializing Login Manager
