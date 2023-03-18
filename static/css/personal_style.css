@@ -1,0 +1,33 @@
+#dev-roadmap {
+  margin: auto;
+  padding-top: 3%;
+  padding-bottom: 3%;
+  width: min(100% - 4rem, 700px);
+  text-align: center;
+  font-size: 0.8em;
+}
+
+#dev-roadmap h2 {
+  font-size: 1rem;
+  color: dimgrey;
+}
+
+#dev-roadmap table {
+  color: cadetblue;
+}
+
+#dev-roadmap th {
+  color: cornflowerblue;
+}
+
+#dev-roadmap .fa-circle-check {
+  color: green;
+}
+
+#dev-roadmap .fa-spinner {
+  color: yellow;
+}
+
+#dev-roadmap .fa-hourglass-start {
+  color: orangered;
+}
