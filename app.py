@@ -18,7 +18,6 @@ import os
 # initializing Flask app
 cur_dir = Path()
 app = Flask(__name__)
-print(os.environ['SECRET_KEY'])
 app.secret_key = os.environ['SECRET_KEY']
 
 # initializing CKEditor
@@ -30,7 +29,6 @@ bootstrap = Bootstrap5()
 bootstrap.init_app(app)
 
 # # CONNECT TO DB
-print(os.environ['DATABASE_URI'])
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URI"]
 db = SQLAlchemy()
 db.init_app(app)
