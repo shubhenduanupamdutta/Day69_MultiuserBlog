@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, session, abort
+from flask import Flask, render_template, redirect, url_for, flash, session, abort, request
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from datetime import date, datetime
@@ -7,13 +7,20 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from sqlalchemy.exc import NoResultFound, IntegrityError, NoSuchModuleError
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm
 from flask_gravatar import Gravatar
 from pathlib import Path
 from functools import wraps
 import psycopg2
 import os
+import smtplib
+from email.message import EmailMessage
 
+
+# ENVIRONMENT VARIABLES
+EMAIL_ID = os.environ['EMAIL']
+EMAIL_PASSWORD = os.environ['PASSWORD']
+EMAIL_TO = os.environ['EMAIL_TO']
 
 # initializing Flask app
 cur_dir = Path()
@@ -110,6 +117,19 @@ def admin_only(function):
     return decorator_function
 
 
+def send_mail(name, email, phone, message):
+    with smtplib.SMTP("smtp.office365.com", port=587) as connection:
+        connection.starttls()
+        connection.login(EMAIL_ID, EMAIL_PASSWORD)
+        msg = EmailMessage()
+        email_body = f"From: {name}\nEmail: {email}\nPhone Number: {phone}\nMessage: {message}"
+        msg.set_content(email_body)
+        msg["Subject"] = "You have a new mail from your portfolio website."
+        msg["To"] = EMAIL_TO
+        msg["From"] = EMAIL_ID
+        connection.send_message(msg)
+
+
 @app.route('/')
 def get_all_posts():
     posts = list(db.session.execute(db.select(BlogPost)).scalars())
@@ -196,9 +216,19 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/contact")
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
-    return render_template("contact.html")
+    form = ContactForm()
+    if form.validate_on_submit():
+        send_mail(
+            name=form.name.data,
+            email=form.email.data,
+            phone=form.phone.data,
+            message=form.message.data
+        )
+        flash("Mail sent successfully!")
+        return redirect(url_for("contact"))
+    return render_template("contact.html", form=form)
 
 
 @app.route("/new-post", methods=["GET", "POST"])

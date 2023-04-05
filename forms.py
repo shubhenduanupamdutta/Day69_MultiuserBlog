@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, EmailField
+from wtforms import StringField, SubmitField, PasswordField, EmailField, TelField, TextAreaField
 from wtforms.validators import InputRequired, URL, Length, Email, EqualTo
 from flask_ckeditor import CKEditorField
 
@@ -31,3 +31,11 @@ class LoginForm(FlaskForm):
 class CommentForm(FlaskForm):
     comment = CKEditorField(label="Comment")
     submit = SubmitField(label="Submit")
+
+
+class ContactForm(FlaskForm):
+    name = StringField("Name", validators=[InputRequired(), Length(min=1)])
+    email = EmailField("Email Address", validators=[InputRequired(), Email()])
+    phone = TelField("Phone", validators=[InputRequired(), Length(min=1)])
+    message = TextAreaField("Your Message", validators=[InputRequired(), Length(min=5, max=500)])
+    submit = SubmitField("Send Mail")
